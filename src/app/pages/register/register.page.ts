@@ -62,6 +62,11 @@ export class RegisterPage {
     });
   }
 
+  ionViewWillEnter() {
+    this.isLoading = false; // Forza el "Cargando" a desaparecer
+    this.error = null;      // Limpia errores antiguos
+  }
+
   async register() {
     if (this.registerForm.invalid) {
       return;

@@ -57,6 +57,11 @@ export class LoginPage {
     });
   }
 
+  ionViewWillEnter() {
+    this.isLoading = false; // Forza el "Cargando" a desaparecer
+    this.error = null;      // Limpia errores antiguos
+  }
+
   async login() {
     if (this.loginForm.invalid) {
       return;
