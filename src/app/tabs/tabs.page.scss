@@ -1,0 +1,13 @@
+
+ion-tab-bar {
+  // Usamos las variables que definimos en variables.scss
+  --background: var(--ion-color-dark);
+  --color: var(--ion-color-step-600, #8E8E93); // Color gris para íconos inactivos
+  --border-color: #333333; // Un borde sutil si lo deseas
+}
+
+/* Estilo para la pestaña SELECCIONADA */
+ion-tab-button.tab-selected {
+  // ¡Usa tu color primario (azul brillante) para el ícono y texto activos!
+  --color: var(--ion-color-primary);
+}

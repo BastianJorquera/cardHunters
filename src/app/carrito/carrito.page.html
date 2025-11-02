@@ -1,0 +1,77 @@
+<app-header></app-header>
+
+<ion-content>
+  <!-- 1. Nos suscribimos al observable del carrito -->
+  <ng-container *ngIf="carrito$ | async as carrito">
+
+    <!-- 2. VISTA 1: Carrito Vacío -->
+    <div *ngIf="carrito.cantidadTotal === 0" class="ion-text-center ion-padding-top empty-cart">
+      <ion-icon name="cart-outline"></ion-icon>
+      <h3>Tu carrito está vacío</h3>
+      <p>Añade cartas del catálogo para verlas aquí.</p>
+      <ion-button routerLink="/tabs/catalogo" color="primary">
+        Ir al Catálogo
+      </ion-button>
+    </div>
+
+    <!-- 3. VISTA 2: Carrito con Items -->
+    <div *ngIf="carrito.cantidadTotal > 0">
+      <ion-list>
+        <!-- Itera sobre los items del carrito -->
+        <ion-item *ngFor="let item of carrito.items" color="medium">
+          <ion-thumbnail slot="start">
+            <img [src]="item.carta.imagen" [alt]="item.carta.nombre">
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{ item.carta.nombre }}</h2>
+            <p>{{ item.carta.precio | currency:'CLP':'$' }} c/u</p>
+          </ion-label>
+
+          <!-- Controles de Cantidad -->
+          <div slot="end" class="quantity-controls">
+            <ion-button fill="clear" (click)="disminuirCantidad(item)">
+              <ion-icon slot="icon-only" name="remove"></ion-icon>
+            </ion-button>
+            <span class="quantity">{{ item.cantidad }}</span>
+            <ion-button fill="clear" (click)="aumentarCantidad(item)">
+              <ion-icon slot="icon-only" name="add"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="eliminarItem(item.carta.id)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+      </ion-list>
+
+      <!-- Botón de Vaciar Carrito -->
+      <div class="ion-padding">
+        <ion-button (click)="vaciarCarrito()" expand="block" fill="outline" color="danger">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Vaciar Carrito
+        </ion-button>
+      </div>
+
+    </div>
+
+    <!--
+      El Footer (pie de página) solo se muestra si hay items
+      y queda "pegado" abajo
+    -->
+    <ion-footer *ngIf="carrito.cantidadTotal > 0">
+      <ion-toolbar color="dark">
+        <div class="footer-summary">
+          <ion-label>
+            Total ({{ carrito.cantidadTotal }} items):
+            <h2>{{ carrito.total | currency:'CLP':'$' }}</h2>
+          </ion-label>
+          <ion-button
+            color="primary"
+            (click)="procederAlPago()">
+            Proceder al Pago
+          </ion-button>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
+
+  </ng-container>
+</ion-content>

@@ -1,0 +1,19 @@
+ion-title {
+  font-family: 'Arial', sans-serif; // Puedes cambiar la fuente
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding-left: 10px; // Un poco de espacio
+}
+
+ion-button {
+  --color: #ffffff; // Fuerza los iconos y texto del botón a ser blancos
+}
+
+ion-badge {
+  position: absolute;
+  top: 8px;
+  right: 2px;
+  font-size: 0.7rem;
+  --padding-start: 4px;
+  --padding-end: 4px;
+}

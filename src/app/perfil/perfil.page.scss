@@ -1,0 +1,31 @@
+.guest-view {
+  ion-icon {
+    font-size: 6rem;
+    color: var(--ion-color-step-400, #a0a0a0);
+  }
+  h3 {
+    font-weight: bold;
+    color: var(--ion-text-color);
+  }
+  p {
+    color: var(--ion-color-step-600, #8E8E93);
+  }
+  ion-button {
+    margin-top: 20px;
+  }
+}
+
+.profile-view {
+  ion-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+  ion-card-subtitle {
+    font-size: 1rem;
+    color: var(--ion-color-step-600, #8E8E93);
+  }
+  p {
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar color="dark">
+
+    <ion-title slot="start">
+      Card Hunters
+    </ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button routerLink="/tabs/carrito">
+        <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
+
+        <ng-container *ngIf="cantidadEnCarrito$ | async as cantidad">
+          <ion-badge *ngIf="cantidad > 0" color="danger">{{ cantidad }}</ion-badge>
+        </ng-container>
+      </ion-button>
+
+      <ion-button *ngIf="(isLoggedIn$ | async) === false" routerLink="/login">
+        <ion-label>Ingresar</ion-label>
+        <ion-icon slot="end" name="log-in-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button *ngIf="isLoggedIn$ | async" routerLink="/tabs/perfil">
+        <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
+      </ion-button>
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

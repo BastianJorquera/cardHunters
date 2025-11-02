@@ -1,0 +1,7 @@
+{
+  "name": "cardHunters",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

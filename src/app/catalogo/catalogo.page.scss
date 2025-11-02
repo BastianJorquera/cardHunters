@@ -1,0 +1,41 @@
+ion-card {
+  margin: 8px;
+  height: 95%; // Asegura que las cards tengan altura similar
+  display: flex;
+  flex-direction: column;
+
+  img {
+    width: 100%;
+    height: 180px; // Altura fija para la imagen
+    object-fit: cover; // Asegura que la imagen cubra el espacio
+  }
+
+  ion-card-header {
+    padding: 10px 12px;
+    flex-grow: 1; // Empuja el botón hacia abajo
+  }
+
+  ion-card-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--ion-text-color);
+  }
+
+  ion-card-subtitle {
+    font-size: 0.8rem;
+    color: var(--ion-color-primary); // Precio en azul
+    font-weight: 600;
+  }
+
+  ion-button {
+    margin: 0;
+    --border-radius: 0;
+    font-size: 0.9rem;
+    height: 40px;
+  }
+}
+
+.ion-activatable {
+  position: relative;
+  overflow: hidden;
+}

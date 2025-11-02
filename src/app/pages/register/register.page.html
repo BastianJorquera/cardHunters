@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Cuenta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-loading [isOpen]="isLoading" message="Creando cuenta..."></ion-loading>
+
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <ion-list>
+      <ion-item color="medium">
+        <ion-label position="floating">Nombre de Usuario</ion-label>
+        <ion-input type="text" formControlName="nombre"></ion-input>
+      </ion-item>
+
+      <ion-item color="medium" class="ion-margin-top">
+        <ion-label position="floating">Correo</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-item color="medium" class="ion-margin-top">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-text color="danger" *ngIf="error">
+      <p class="ion-padding-start">{{ error }}</p>
+    </ion-text>
+
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="registerForm.invalid || isLoading"
+      color="primary"
+      class="ion-margin-top">
+      Crear Cuenta
+    </ion-button>
+  </form>
+
+</ion-content>
