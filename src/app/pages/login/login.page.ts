@@ -13,6 +13,7 @@ import {
   IonLabel,
   IonInput,
   IonButton,
+  IonButtons,
   IonText,
   IonLoading,
   ToastController
@@ -36,6 +37,7 @@ import {
     IonLabel,
     IonInput,
     IonButton,
+    IonButtons,
     IonText,
     IonLoading
   ]

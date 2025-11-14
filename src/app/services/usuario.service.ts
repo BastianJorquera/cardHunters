@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
@@ -10,6 +10,9 @@ import { environment } from 'src/environments/environment';
 export class UsuarioService {
 
   private apiUrl = environment.apiUrl;
+  
+  // guarda los datos de usuario
+  public usuario: any | null = null;
 
   // 1. El "Estado" privado. Un BehaviorSubject guarda el valor actual.
   //    Comienza como 'null' (cargando)
@@ -71,21 +74,70 @@ export class UsuarioService {
    */
   logout() {
     localStorage.removeItem('auth_token');
-    // Notifica a todos los suscriptores que el estado cambió a 'false'
+    // Notifica a todos los suscriptores que el estado cambió a 'false' y eliminamos usuario guardado
+    this.usuario = null;
     this.isLoggedInSubject.next(false);
   }
 
   /**
    * Obtiene el perfil del usuario usando el token guardado.
    */
-  getProfile(): Observable<any> { // Deberías cambiar 'any' por tu interfaz 'Usuario'
+  getProfile(): Observable<any> {
+    if (this.usuario) {
+      return of(this.usuario); // devuelve directamente si ya lo tenemos
+    }
+
     const token = localStorage.getItem('auth_token');
+    const headers = new HttpHeaders({
+      'x-auth-token': token || ''
+    });
+
+    return this.http.get(`${this.apiUrl}/users/me`, { headers }).pipe(
+      tap((data) => {
+        this.usuario = data; // guardamos en memoria para reutilizar
+      })
+    );
+  }
+
+  //acceder a usuario en otras paginas
+  getUsuario(): any | null {
+    return this.usuario;
+  }
+  
+  //actualizar usuario en otras paginas
+  setUsuario(usuario: any) {
+    this.usuario = usuario;
+  }
+
+  actualizarPerfil(data: any): Observable<any> {
+    const token = localStorage.getItem('auth_token');
+    const headers = new HttpHeaders({
+      'x-auth-token': token || ''
+    });
+
+    return this.http.put(`${this.apiUrl}/users/me`, data, { headers }).pipe(
+      tap((res: any) => {
+        // Actualiza el usuario almacenado localmente
+        this.usuario = res.user;
+      })
+    );
+  }
+
+  deletePerfil(): Observable<any> {
+    const token = localStorage.getItem('auth_token');
+    console.log('TOKEN EN FRONT AL ELIMINAR:', token); // <-- prueba
 
     const headers = new HttpHeaders({
       'x-auth-token': token || ''
     });
 
-    return this.http.get(`${this.apiUrl}/users/me`, { headers: headers });
+    return this.http.delete(`${this.apiUrl}/users/me`, { headers }).pipe(
+      tap(() => {
+        // limpiar info local
+        this.logout();
+      })
+    );
   }
+  
 }
 

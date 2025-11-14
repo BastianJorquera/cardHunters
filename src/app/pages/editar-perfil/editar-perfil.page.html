@@ -1,0 +1,90 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Editar datos de mi perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button slot="end" expand="block" [routerLink]="['../tabs/perfil']" > VOLVER A MI PERFIL</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card>
+    <ion-card-header>
+
+      <!-- Avatar -->
+      <ion-item>
+        <ion-avatar slot="start" class="ion-margin-start ion-margin-bottom">
+          <img alt="Perfil" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        </ion-avatar>
+        <ion-button fill="clear" color="primary">Cambiar foto de perfil</ion-button>
+      </ion-item>
+
+
+      <!-- DATOS DEL USUARIO -->
+      <ion-list>
+
+        <!-- NOMBRE -->
+        <ion-item lines="full">
+          <ion-label position="floating">Nombre anterior: {{ usuario?.nombre_usuario }}</ion-label>
+          <ion-input
+            type="text"
+            placeholder="Escriba aqui el nuevo nombre"
+            (ionInput)="usuarioEditable.nombre_usuario = $event.target.value">
+          </ion-input>
+        </ion-item>
+
+
+        <!-- CORREO -->
+        <ion-item lines="full">
+          <ion-label position="floating">Correo anterior: {{ usuario?.correo }}</ion-label>
+
+          <ion-input
+            type="email"
+            placeholder="Escriba aqui el nuevo correo"
+            (ionInput)="usuarioEditable.correo = $event.target.value">
+          </ion-input>
+        </ion-item>
+
+
+        <!-- TELÉFONO (estático por ahora) -->
+        <ion-item lines="full">
+          <ion-label position="floating">Teléfono anterior: {{ usuario?.telefono }}</ion-label>
+
+          <ion-input
+            type="text"
+            placeholder="Escriba aqui el nuevo teléfono"
+            (ionInput)="usuarioEditable.telefono = $event.target.value">
+          </ion-input>
+        </ion-item>
+
+      </ion-list>
+
+
+      <!-- BOTONES -->
+      <ion-item>
+        <ion-button fill="outline" color="primary" (click)="guardarCambios()">
+          GUARDAR CAMBIOS
+        </ion-button>
+      </ion-item>
+
+      <ion-item lines="none" class="ion-text-center">
+        <ion-button fill="outline" color="primary">
+          CAMBIAR CONTRASEÑA
+        </ion-button>
+
+        <ion-button fill="outline" color="primary">
+          CAMBIAR DIRECCIÓN
+        </ion-button>
+      </ion-item>
+
+      <ion-item lines="none" class="ion-text-center">
+        <ion-button fill="outline" color="danger" (click)="eliminarCuenta()">
+          ELIMINAR CUENTA
+        </ion-button>
+      </ion-item>
+
+    </ion-card-header>
+  </ion-card>
+
+</ion-content>

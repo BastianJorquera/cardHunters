@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { Router } from '@angular/router';
+import { IonAvatar } from '@ionic/angular/standalone';
 
 // Imports para Standalone
 import { CommonModule } from '@angular/common';
@@ -37,7 +38,8 @@ import { logOutOutline } from 'ionicons/icons';
     IonCardTitle,
     IonCardSubtitle,
     IonCardContent,
-    IonSpinner
+    IonSpinner,
+    IonAvatar
   ],
 })
 export class PerfilPage implements OnInit {
@@ -66,26 +68,35 @@ export class PerfilPage implements OnInit {
    * Solo necesitamos cargar los datos.
    */
   cargarDatosUsuario() {
-    this.usuario = null; // Muestra el spinner
-    this.usuarioService.getProfile().subscribe({
-      next: (data) => {
-        this.usuario = data;
-      },
-      error: (err) => {
-        // Si el token expiró o es inválido, el servicio
-        // (o un interceptor futuro) debería cerrar la sesión.
-        console.error('Error al obtener perfil:', err);
-        this.usuarioService.logout();
-        this.router.navigateByUrl('/login'); // Devuélvelo al login
-      }
-    });
+  // Si ya tenemos el usuario cargado en el servicio, úsalo directamente
+  if (this.usuarioService.usuario) {
+    this.usuario = this.usuarioService.usuario;
+    return;
   }
 
-  /**
-   * Llama al servicio para cerrar sesión
-   */
+  // Si no está cargado, muestra spinner y pide los datos al backend
+  this.usuario = null;
+  this.usuarioService.getProfile().subscribe({
+    next: (data) => {
+      this.usuario = data;
+    },
+    error: (err) => {
+      console.error('Error al obtener perfil:', err);
+      this.usuarioService.logout();
+      this.router.navigateByUrl('/login');
+    }
+  });
+  }
+
+  
+  //Llama al servicio para cerrar sesión
+  
   cerrarSesion() {
     this.usuarioService.logout();
     this.router.navigateByUrl('/login'); // Envíalo a login
+  }
+
+  irAEditarPerfil() {
+    this.router.navigateByUrl('/editar-perfil'); // Navega a la página de editar perfil
   }
 }

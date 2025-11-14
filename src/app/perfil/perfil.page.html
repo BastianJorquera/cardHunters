@@ -13,6 +13,10 @@
       <ion-card-header>
         <ion-card-title>¡Hola, {{ usuario.nombre_usuario }}!</ion-card-title>
         <ion-card-subtitle>{{ usuario.correo }}</ion-card-subtitle>
+        <ion-avatar class="ion-margin-top">
+          <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
+        </ion-avatar>
+
       </ion-card-header>
       <ion-card-content>
         <p>Miembro desde: {{ usuario.fecha_registro | date:'longDate' }}</p>
@@ -20,6 +24,14 @@
 
         <ion-button expand="block" color="primary" class="ion-margin-top">
           Ver Historial de Compras
+        </ion-button>
+
+        <ion-button expand="block" color="primary" class="ion-margin-top">
+          Ver Historial de publicaciones
+        </ion-button>
+
+        <ion-button expand="block" color="primary" (click)="irAEditarPerfil()" class="ion-margin-top">
+          EDITAR MI PERFIL
         </ion-button>
 
         <ion-button expand="block" color="danger" (click)="cerrarSesion()" class="ion-margin-top">

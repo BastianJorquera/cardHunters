@@ -87,7 +87,7 @@ export class RegisterPage {
         this.isLoading = false;
         await this.mostrarToast('¡Cuenta creada! Ahora puedes iniciar sesión.', 'success');
 
-        // ¡Como pediste! Redirige de vuelta al Login
+        // Redirige de vuelta al Login
         this.router.navigateByUrl('/login');
       },
       error: async (err) => {
