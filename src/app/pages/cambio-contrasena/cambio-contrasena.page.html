@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Cambiar mi contraseña</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['../editar-perfil']">VOLVER</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <ion-card>
+    <ion-card-content>
+
+      <!-- CONTRASEÑA ACTUAL -->
+      <ion-item lines="full">
+        <ion-label position="floating">Contraseña actual</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="form.oldPassword">
+        </ion-input>
+      </ion-item>
+
+      <!-- NUEVA CONTRASEÑA -->
+      <ion-item lines="full" class="ion-margin-top">
+        <ion-label position="floating">Nueva contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="form.newPassword">
+        </ion-input>
+      </ion-item>
+
+      <!-- REPETIR NUEVA CONTRASEÑA -->
+      <ion-item lines="full" class="ion-margin-top">
+        <ion-label position="floating">Repetir nueva contraseña</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="form.confirmPassword">
+        </ion-input>
+      </ion-item>
+
+      <!-- MENSAJES -->
+      <ion-text color="danger" *ngIf="errorMsg" class="ion-margin-top">
+        {{ errorMsg }}
+      </ion-text>
+
+      <ion-text color="success" *ngIf="successMsg" class="ion-margin-top">
+        {{ successMsg }}
+      </ion-text>
+
+      <ion-button
+        expand="block"
+        color="primary"
+        class="ion-margin-top"
+        (click)="onChangePassword()"
+        [disabled]="loading">
+        <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+        Guardar nueva contraseña
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

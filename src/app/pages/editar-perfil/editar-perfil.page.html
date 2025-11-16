@@ -15,9 +15,21 @@
       <!-- Avatar -->
       <ion-item>
         <ion-avatar slot="start" class="ion-margin-start ion-margin-bottom">
-          <img alt="Perfil" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          <img alt="Perfil"
+          [src]="usuarioEditable?.foto_perfil || 'https://ionicframework.com/docs/img/demos/avatar.svg'" />
         </ion-avatar>
-        <ion-button fill="clear" color="primary">Cambiar foto de perfil</ion-button>
+
+        <ion-button fill="clear" color="primary" (click)="onClickCambiarFoto()">
+          Cambiar foto de perfil
+        </ion-button>
+
+        <input
+          type="file"
+          accept="image/*"
+          #fileInput
+          style="display: none"
+          (change)="onFileSelected($event)"/>
+
       </ion-item>
 
 
@@ -30,7 +42,8 @@
           <ion-input
             type="text"
             placeholder="Escriba aqui el nuevo nombre"
-            (ionInput)="usuarioEditable.nombre_usuario = $event.target.value">
+            (ionInput)="usuarioEditable.nombre_usuario = $event.target.value"
+            class="ion-margin-top">
           </ion-input>
         </ion-item>
 
@@ -42,7 +55,8 @@
           <ion-input
             type="email"
             placeholder="Escriba aqui el nuevo correo"
-            (ionInput)="usuarioEditable.correo = $event.target.value">
+            (ionInput)="usuarioEditable.correo = $event.target.value"
+            class="ion-margin-top">
           </ion-input>
         </ion-item>
 
@@ -54,7 +68,8 @@
           <ion-input
             type="text"
             placeholder="Escriba aqui el nuevo teléfono"
-            (ionInput)="usuarioEditable.telefono = $event.target.value">
+            (ionInput)="usuarioEditable.telefono = $event.target.value"
+            class="ion-margin-top">
           </ion-input>
         </ion-item>
 
@@ -69,7 +84,7 @@
       </ion-item>
 
       <ion-item lines="none" class="ion-text-center">
-        <ion-button fill="outline" color="primary">
+        <ion-button fill="outline" color="primary" [routerLink]="['../cambio-contrasena']">
           CAMBIAR CONTRASEÑA
         </ion-button>
 

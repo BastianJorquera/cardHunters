@@ -81,7 +81,7 @@ export class LoginPage {
     this.usuarioService.login(credentials).subscribe({
       next: async (res) => {
         this.isLoading = false;
-        await this.mostrarToast('¡Bienvenido!', 'success');
+        await this.mostrarToast('¡Bienvenido! de nuevo', 'success');
 
         // Redirige a la página principal (Catálogo)
         // replaceUrl: true evita que pueda "volver" al login con el botón atrás

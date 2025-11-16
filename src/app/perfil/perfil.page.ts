@@ -69,10 +69,12 @@ export class PerfilPage implements OnInit {
    */
   cargarDatosUsuario() {
   // Si ya tenemos el usuario cargado en el servicio, úsalo directamente
+  /* 
   if (this.usuarioService.usuario) {
     this.usuario = this.usuarioService.usuario;
     return;
   }
+  */
 
   // Si no está cargado, muestra spinner y pide los datos al backend
   this.usuario = null;

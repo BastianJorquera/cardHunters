@@ -1,5 +1,5 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../services/usuario.service';
@@ -44,6 +44,8 @@ import { IonContent,
 })
 export class EditarPerfilPage implements OnInit {
 
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   public usuario: any | null = null;
   public usuarioEditable: any | null = null;
 
@@ -56,8 +58,6 @@ export class EditarPerfilPage implements OnInit {
   this.usuario = this.usuarioService.getUsuario();
   this.usuarioEditable = { ...this.usuario }; // Hacemos una copia para editar
 
-    // Si el servicio no lo tiene (por ejemplo, si recargaste la página),
-    // lo pedimos al backend:
     if (!this.usuario) {
       this.usuarioService.getProfile().subscribe({
         next: (data: any) => {
@@ -71,7 +71,27 @@ export class EditarPerfilPage implements OnInit {
       });
     }
   }
+  
+  onClickCambiarFoto() {
+    this.fileInput.nativeElement.click();
+  }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string; // ej: "data:image/png;base64,AAAA..."
+      // guardamos en usuarioEditable para enviarlo al backend al guardar
+      this.usuarioEditable.foto_perfil = base64;
+    };
+    reader.readAsDataURL(file);
+  }
 
   guardarCambios() {
     console.log("Nombre editado:", this.usuarioEditable.nombre_usuario);
@@ -107,20 +127,6 @@ export class EditarPerfilPage implements OnInit {
       }
     });
   }
-
-  cambiarPassword() {
-    /*
-  const payload = {
-    passwordActual: this.passwordActual,
-    passwordNueva: this.passwordNueva,
-  };
-  
-  this.usuarioService.cambiarPassword(payload).subscribe({
-    next: (res) => console.log('Contraseña cambiada:', res),
-    error: (err) => console.error('Error al cambiar contraseña:', err),
-  });
-  */
-}
 
   confirmarEliminar() {
     const confirmar = confirm('¿Seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');

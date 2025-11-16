@@ -123,6 +123,15 @@ export class UsuarioService {
     );
   }
 
+  changePassword(body: { oldPassword: string; newPassword: string }): Observable<any> {
+    const token = localStorage.getItem('auth_token');
+    const headers = new HttpHeaders({
+      'x-auth-token': token || ''
+    });
+
+    return this.http.put(`${this.apiUrl}/users/change-password`, body, { headers });
+  }
+
   deletePerfil(): Observable<any> {
     const token = localStorage.getItem('auth_token');
     console.log('TOKEN EN FRONT AL ELIMINAR:', token); // <-- prueba
