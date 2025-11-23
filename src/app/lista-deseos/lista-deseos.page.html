@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Lista de deseos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ng-container *ngIf="listaDeseos$ | async as estado">
+    <ng-container *ngIf="estado.items.length > 0; else vacio">
+
+      <ion-list>
+        <ion-item *ngFor="let item of estado.items">
+          <ion-thumbnail slot="start">
+            <img [src]="item.carta.imagen" [alt]="item.carta.nombre" />
+          </ion-thumbnail>
+
+          <ion-label>
+            <h2>{{ item.carta.nombre }}</h2>
+            <p>{{ item.carta.precio | currency:'CLP':'$' }}</p>
+          </ion-label>
+
+          <ion-button fill="clear" color="danger" (click)="quitarDeDeseos(item)">
+            <ion-icon slot="icon-only" name="heart-dislike-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-footer>
+        <ion-toolbar>
+          <ion-button expand="block" color="danger" (click)="vaciarLista()">
+            Vaciar lista de deseos
+          </ion-button>
+        </ion-toolbar>
+      </ion-footer>
+
+    </ng-container>
+  </ng-container>
+
+  <ng-template #vacio>
+    <div class="ion-text-center ion-padding">
+      <p>No tienes cartas en tu lista de deseos.</p>
+    </div>
+  </ng-template>
+
+</ion-content>

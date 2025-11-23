@@ -24,6 +24,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard] // <-- 2. Aplica el Guardia
       },
       {
+        path: 'lista-deseos', // Ruta pública
+        loadComponent: () =>
+          import('../lista-deseos/lista-deseos.page').then((m) => m.ListaDeseosPage),
+        
+      },
+      {
         path: '',
         redirectTo: 'catalogo',
         pathMatch: 'full',

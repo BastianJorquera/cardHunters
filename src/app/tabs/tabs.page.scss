@@ -4,10 +4,25 @@ ion-tab-bar {
   --background: var(--ion-color-dark);
   --color: var(--ion-color-step-600, #8E8E93); // Color gris para íconos inactivos
   --border-color: #333333; // Un borde sutil si lo deseas
+
+  display: flex;
+  align-items: center;
 }
 
 /* Estilo para la pestaña SELECCIONADA */
 ion-tab-button.tab-selected {
   // ¡Usa tu color primario (azul brillante) para el ícono y texto activos!
   --color: var(--ion-color-primary);
+}
+
+ion-tab-button[tab="logo"] {
+  flex: 0 0 auto;
+  margin-right: auto;
+}
+
+.logo-tab-img {
+  height: 65px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
 }
