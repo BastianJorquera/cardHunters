@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
-// Define tu interfaz de Carta aquí o en 'models'
-// (Puedes mover esto a un archivo 'models/carta.interface.ts' luego)
 export interface Carta {
-  id: number;
+  id_carta: number;
   nombre: string;
-  precio: number;
-  imagen: string;
-  juego: 'Pokemon' | 'YuGiOh' | 'Magic';
+  rareza: string;
+  tipo: string;
+  id_franquicia: number;
+  imagen_carta: string;
+  id_api_externa?: string | null;
+  nombre_set?: string | null;
+  numero_carta?: string | null;
 }
 
 @Injectable({
@@ -16,7 +20,9 @@ export interface Carta {
 })
 export class CartasService {
 
-  // --- DATOS EN DURO ---
+  private apiUrl = `${environment.apiUrl}/cartas`;
+
+  /*/ --- DATOS EN DURO ---
   private mockCartas: Carta[] = [
     { id: 1, nombre: 'Pikachu VMAX', precio: 15000, imagen: 'https://placehold.co/200x280/F7DE3E/000000?text=Pikachu', juego: 'Pokemon' },
     { id: 2, nombre: 'Mago Oscuro', precio: 10000, imagen: 'https://placehold.co/200x280/2A0F46/FFFFFF?text=Mago+Oscuro', juego: 'YuGiOh' },
@@ -25,15 +31,34 @@ export class CartasService {
     { id: 5, nombre: 'Dragón Blanco de Ojos Azules', precio: 25000, imagen: 'https://placehold.co/200x280/A0D0EF/000000?text=Dragon+Blanco', juego: 'YuGiOh' },
     { id: 6, nombre: 'Jace, el Escultor Mental', precio: 30000, imagen: 'https://placehold.co/200x280/3A8DDE/FFFFFF?text=Jace', juego: 'Magic' },
   ];
-  // ---------------------
+  // ---------------------*/
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  /**
-   * Devuelve los datos en duro como un Observable (simulando una API)
-   */
+//(GET /api/cartas)
   getCartas(): Observable<Carta[]> {
-    return of(this.mockCartas);
+    return this.http.get<Carta[]>(this.apiUrl);
   }
+
+  //(GET /api/cartas/:id)
+  getCartaById(id_carta: number): Observable<Carta> {
+    return this.http.get<Carta>(`${this.apiUrl}/${id_carta}`);
+  }
+
+  //(GET /api/cartas/search?nombre=...&franquicia=...)
+  buscarCartas(nombre: string, id_franquicia?: number): Observable<Carta[]> {
+    const params: any = {};
+
+    if (nombre && nombre.trim().length > 0) {
+      params.nombre = nombre.trim();
+    }
+
+    if (id_franquicia !== undefined && id_franquicia !== null) {
+      params.franquicia = id_franquicia;
+    }
+
+    return this.http.get<Carta[]>(`${this.apiUrl}/search`, { params });
+  }
+  
 }
 

@@ -1,0 +1,136 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Vender Cartas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Vender Cartas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="ion-padding">
+    <!-- Texto bajo el título -->
+    <p class="ion-text-wrap ion-margin-bottom">
+      Publica tus cartas para que otros usuarios puedan comprarlas.
+    </p>
+
+    <!-- FORMULARIO -->
+    <ion-list>
+
+      <!-- Búsqueda de carta -->
+      <ion-item>
+        <ion-label position="stacked">Buscar carta</ion-label>
+        <ion-searchbar
+          placeholder="Escribe el nombre de la carta"
+          (ionInput)="onBuscarCartas($event)"
+        ></ion-searchbar>
+      </ion-item>
+
+      <!-- Selección de carta -->
+      <ion-item>
+        <ion-label position="stacked">Carta</ion-label>
+        <ion-select
+          placeholder="Selecciona una carta"
+          [(ngModel)]="cartaSeleccionadaId"
+          name="cartaSeleccionadaId"
+        >
+          <ion-select-option
+            *ngFor="let carta of cartas"
+            [value]="carta.id_carta"
+          >
+            {{ carta.nombre }} - {{ carta.rareza }} - {{ carta.nombre_set }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Precio -->
+      <ion-item>
+        <ion-label position="stacked">Precio</ion-label>
+        <ion-input
+          type="number"
+          min="0"
+          [(ngModel)]="precio"
+          name="precio"
+          placeholder="Ej: 15000"
+        ></ion-input>
+      </ion-item>
+
+      <!-- Cantidad -->
+      <ion-item>
+        <ion-label position="stacked">Cantidad</ion-label>
+        <ion-input
+          type="number"
+          min="1"
+          [(ngModel)]="cantidad"
+          name="cantidad"
+          placeholder="Ej: 1"
+        ></ion-input>
+      </ion-item>
+
+      <!-- Observación (estado en BD) -->
+      <ion-item>
+        <ion-label position="stacked">Observación</ion-label>
+        <ion-textarea
+          autoGrow="true"
+          rows="3"
+          placeholder="Ej: Carta con leve desgaste en las esquinas..."
+          [(ngModel)]="estado"
+          name="estado"
+        ></ion-textarea>
+      </ion-item>
+    </ion-list>
+
+    <!-- BOTONES: PUBLICAR + LIMPIAR -->
+    <div class="ion-margin-top" style="display: flex; gap: 8px;">
+      <ion-button expand="block" (click)="crearPublicacion()">
+        Publicar
+      </ion-button>
+
+      <ion-button expand="block" color="medium" fill="outline" (click)="limpiarFormulario()">
+        Limpiar
+      </ion-button>
+    </div>
+
+    <!-- LISTA DE PUBLICACIONES ACTIVAS DEL USUARIO -->
+    <div class="ion-margin-top">
+      <h2 class="ion-text-start ion-margin-bottom" style="font-size: 1.1rem;">
+        Mis publicaciones activas
+      </h2>
+
+      <!-- Si no hay publicaciones -->
+      <p *ngIf="!misPublicaciones || misPublicaciones.length === 0" class="ion-text-wrap">
+        Aún no tienes publicaciones activas.
+      </p>
+
+      <!-- Lista de publicaciones -->
+      <ion-list *ngIf="misPublicaciones && misPublicaciones.length > 0">
+        <ion-item *ngFor="let pub of misPublicaciones">
+          <ion-label>
+            <h3>
+              <!-- Usa la carta anidada devuelta por el backend -->
+              {{ pub.carta?.nombre || ('Carta ID ' + pub.id_carta) }}
+            </h3>
+            <p *ngIf="pub.carta?.nombre_set">
+              Set: {{ pub.carta?.nombre_set }}
+            </p>
+            <p>
+              Precio: {{ pub.precio | currency:'CLP':'symbol-narrow':'1.0-0' }}
+            </p>
+            <p>
+              Cantidad: {{ pub.cantidad }}
+            </p>
+            <p *ngIf="pub.estado">
+              Observación: {{ pub.estado }}
+            </p>
+            <p *ngIf="pub.fecha_publicacion">
+              Publicado el: {{ pub.fecha_publicacion | date:'dd-MM-yyyy' }}
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

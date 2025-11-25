@@ -1,35 +1,44 @@
-<!-- 1. Muestra el Header Global 
-<app-header></app-header>
--->
-
 <ion-content [fullscreen]="true">
-  <!--
-    Usamos el 'async' pipe. Se suscribe automáticamente al observable 'cartas$'
-    y maneja el 'loading' y 'error' por nosotros.
-  -->
-  <ng-container *ngIf="cartas$ | async as cartas; else loading">
+
+  <!-- Nos suscribimos a publicaciones$ -->
+  <ng-container *ngIf="publicaciones$ | async as publicaciones; else loading">
     <ion-grid>
       <ion-row>
 
-        <!-- 2. Itera sobre las cartas -->
-        <ion-col size="6" size-md="4" size-lg="3" *ngFor="let carta of cartas">
+        <!-- Itera sobre las publicaciones -->
+        <ion-col
+          size="6"
+          size-md="4"
+          size-lg="3"
+          *ngFor="let pub of publicaciones">
 
-          <!-- Usamos el color 'dark' que definiste en variables.scss -->
-          <ion-card (click)="verDetalleCarta(carta)" color="dark" class="ion-activatable">
+          <ion-card
+            (click)="verDetallePublicacion(pub)"
+            color="dark"
+            class="ion-activatable">
+
             <ion-ripple-effect></ion-ripple-effect>
 
-            <img [src]="carta.imagen" [alt]="carta.nombre" />
+            <!-- Imagen: viene de la carta asociada -->
+            <img
+              [src]="pub.carta?.imagen_carta"
+              [alt]="pub.carta?.nombre || 'Carta'" />
 
             <ion-card-header>
-              <ion-card-title>{{ carta.nombre }}</ion-card-title>
-              <!-- 3. Formatea el precio como moneda chilena -->
-              <ion-card-subtitle>{{ carta.precio | currency:'CLP':'$' }}</ion-card-subtitle>
+              <ion-card-title>
+                {{ pub.carta?.nombre }}
+              </ion-card-title>
+
+              <!-- Precio: viene de la PUBLICACIÓN -->
+              <ion-card-subtitle>
+                {{ pub.precio | currency:'CLP':'$' }}
+              </ion-card-subtitle>
             </ion-card-header>
 
             <ion-button
               expand="full"
-              (click)="agregarAlCarrito(carta, $event)"
-              color="primary"> <!-- Usa el azul que definiste -->
+              (click)="agregarAlCarrito(pub, $event)"
+              color="primary">
               Añadir al Carrito
             </ion-button>
           </ion-card>
@@ -43,7 +52,7 @@
   <ng-template #loading>
     <div class="ion-text-center ion-padding">
       <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando cartas...</p>
+      <p>Cargando publicaciones...</p>
     </div>
   </ng-template>
 

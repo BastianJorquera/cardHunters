@@ -29,12 +29,6 @@ export const routes: Routes = [
   {
     path: 'cambio-contrasena',
     loadComponent: () => import('./pages/cambio-contrasena/cambio-contrasena.page').then( m => m.CambioContrasenaPage)
-  },  {
-    path: 'lista-deseos',
-    loadComponent: () => import('./lista-deseos/lista-deseos.page').then( m => m.ListaDeseosPage)
   },
-
-
-
 ];
 

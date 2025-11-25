@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Carta } from '../services/cartas.service';
+import { Carta } from './cartas.service';
 
 //INTERFACE
+export interface CartaDeseo {
+  id: number;
+  nombre: string;
+  precio: number;
+  imagen: string;
+}
+
 export interface DeseoItem{
-  carta: Carta;
+  carta: CartaDeseo;
 }
 
 export interface ListaDeseosState {
@@ -31,7 +38,7 @@ export class ListaDeseosService {
   }
 
   //añadir item
-  addItem(carta: Carta) {
+  addItem(carta: CartaDeseo) {
     const estadoActual = this.listaDeseosSubject.value;
     const items = [...estadoActual.items];
 

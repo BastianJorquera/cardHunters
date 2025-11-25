@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CartasService, Carta } from '../services/cartas.service'; // Importa el servicio y la interfaz
+import { PublicacionesService, Publicacion } from '../services/publicaciones.service'; // Importa el servicio y la interfaz
 import { CarritoService } from '../services/carrito.service';
 
 // Imports para Standalone
@@ -48,15 +48,15 @@ import {
 })
 export class CatalogoPage implements OnInit {
 
-  public cartas$: Observable<Carta[]>; // Un observable para las cartas
+  public publicaciones$: Observable<Publicacion[]>; // Un observable para las publicaciones
 
   constructor(
-    private cartasService: CartasService,
+    private publicacionesService: PublicacionesService,
     private carritoService: CarritoService,
-    private toastController: ToastController // ToastController se inyecta
+    private toastController: ToastController
   ) {
     // Inicializa el observable (aún no se suscribe)
-    this.cartas$ = this.cartasService.getCartas();
+    this.publicaciones$ = this.publicacionesService.getPublicaciones();
   }
 
   ngOnInit() {
@@ -65,23 +65,41 @@ export class CatalogoPage implements OnInit {
   /**
    * Llama al CarritoService para añadir un item
    */
-  async agregarAlCarrito(carta: Carta, event: Event) {
+  async agregarAlCarrito(pub: Publicacion, event: Event) {
     event.stopPropagation(); // Evita que el clic se propague a la card
-    this.carritoService.addItem(carta);
+
+    if (!pub.carta) {
+      console.error('La publicación no tiene carta asociada:', pub);
+      return;
+    }
+
+    const cartaParaCarrito: any = {
+      ...pub.carta,
+      // Campos "amigables" que usan las plantillas del carrito/lista de deseos
+      id: pub.id_publicacion,
+      precio: pub.precio,
+      imagen: pub.carta.imagen_carta    
+    };
+
+    this.carritoService.addItem(cartaParaCarrito);
 
     // Muestra una notificación (Toast)
     const toast = await this.toastController.create({
-      message: `${carta.nombre} añadido al carrito`,
+      message: `${pub.carta.nombre} añadido al carrito`,
       duration: 1500,
-      position: 'bottom',
+      position: 'top',
       color: 'success'
     });
     toast.present();
   }
 
-  verDetalleCarta(carta: Carta) {
-    console.log('Navegar al detalle de:', carta.nombre);
-    // this.router.navigateByUrl(`/detalle-carta/${carta.id}`);
+  verDetallePublicacion(pub: Publicacion) {
+    if (!pub.carta) {
+      console.log('Publicación sin carta asociada:', pub);
+      return;
+    }
+    console.log('Navegar al detalle de:', pub.carta.nombre);
+    // this.router.navigateByUrl(`/detalle-publicacion/${pub.id_publicacion}`);
   }
 }
 

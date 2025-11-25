@@ -22,7 +22,7 @@
         <!-- Itera sobre los items del carrito -->
         <ion-item *ngFor="let item of carrito.items" color="medium">
           <ion-thumbnail slot="start">
-            <img [src]="item.carta.imagen" [alt]="item.carta.nombre">
+            <img [src]="item.carta.imagenUrl" [alt]="item.carta.nombre">
           </ion-thumbnail>
           <ion-label>
             <h2>{{ item.carta.nombre }}</h2>

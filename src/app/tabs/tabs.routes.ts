@@ -13,6 +13,11 @@ export const routes: Routes = [
           import('../catalogo/catalogo.page').then((m) => m.CatalogoPage),
       },
       {
+        path: 'generar-publicacion', // Ruta pública
+        loadComponent: () =>
+          import('../generar-publicacion/generar-publicacion.page').then((m) => m.GenerarPublicacionPage),
+      },
+      {
         path: 'carrito', // Ruta pública
         loadComponent: () =>
           import('../carrito/carrito.page').then((m) => m.CarritoPage),
@@ -27,7 +32,7 @@ export const routes: Routes = [
         path: 'lista-deseos', // Ruta pública
         loadComponent: () =>
           import('../lista-deseos/lista-deseos.page').then((m) => m.ListaDeseosPage),
-        
+
       },
       {
         path: '',

@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Carta } from '../services/cartas.service'; // Asumiendo que la interfaz está en cartas.service
 
 // --- Interfaces (Mantenidas aquí para simplicidad) ---
+export interface CartaCarrito{
+  id: number;     //ID para el carrito
+  nombre: string;
+  precio: number;
+  imagenUrl: string;
+}
 export interface CarritoItem {
-  carta: Carta;
+  carta: CartaCarrito;
   cantidad: number;
 }
 
@@ -31,18 +36,12 @@ export class CarritoService {
   // 2. El "Observable" público. Los componentes se suscriben a esto.
   public carrito$ = this.carritoSubject.asObservable();
 
-  constructor() {
-    // (Opcional) Cargar carrito desde localStorage si existe
-    // const guardado = localStorage.getItem('carrito');
-    // if (guardado) {
-    //   this.carritoSubject.next(JSON.parse(guardado));
-    // }
-  }
+  constructor() {}
 
   /**
    * Añade un item al carrito.
    */
-  addItem(carta: Carta) {
+  addItem(carta: CartaCarrito) {
     const estadoActual = this.carritoSubject.value; // Obtiene el valor actual
     const items = [...estadoActual.items]; // Copia los items
 
@@ -89,7 +88,7 @@ export class CarritoService {
    * Vacía el carrito por completo.
    */
   clearCart() { // <-- ARREGLO 3: AÑADIDA ESTA FUNCIÓN
-    this.actualizarSubject([]); // Llama a actualizar con un array vacío
+    this.actualizarSubject([]);
   }
 
   /**
@@ -107,10 +106,7 @@ export class CarritoService {
       total: total
     };
 
-    // (Opcional) Guarda en localStorage
-    // localStorage.setItem('carrito', JSON.stringify(nuevoEstado));
-
-    // 4. Notifica a todos los suscriptores con el nuevo estado
+    // Notifica a todos los suscriptores con el nuevo estado
     this.carritoSubject.next(nuevoEstado);
   }
 }
