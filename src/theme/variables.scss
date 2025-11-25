@@ -1,20 +1,20 @@
 :root {
-  --ion-color-primary: #0A84FF; /* El azul brillante de tu mockup */
+  --ion-color-primary: #E6E6E6; /* El azul brillante de tu mockup */
   --ion-color-primary-rgb: 10, 132, 255;
-  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast: #414143;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #0974e0;
-  --ion-color-primary-tint: #238ffc;
+  --ion-color-primary-shade: #999;
+  --ion-color-primary-tint: #999;
 
   /* Colores del Modo Oscuro (basados en tu mockup) */
-  --ion-color-dark: #1C1C1E; /* Fondo para Header/Tabs (Gris oscuro) */
+  --ion-color-dark: #545252; /* Fondo para Header/Tabs (Gris oscuro) */
   --ion-color-dark-rgb: 28, 28, 30;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;
   --ion-color-dark-shade: #19191a;
   --ion-color-dark-tint: #333335;
 
-  --ion-color-medium: #2C2C2E; /* Fondo para el contenido de la página */
+  --ion-color-medium: #cacaca; /* Fondo para el contenido de la página */
   --ion-color-medium-rgb: 44, 44, 46;
   --ion-color-medium-contrast: #ffffff;
   --ion-color-medium-contrast-rgb: 255, 255, 255;
@@ -30,16 +30,16 @@
   --ion-background-color-rgb: var(--ion-color-medium-rgb);
 
   /* Color del texto */
-  --ion-text-color: #ffffff;
+  --ion-text-color: #272729;
   --ion-text-color-rgb: 255, 255, 255;
 
   /* Color de fondo del Toolbar (Header) */
-  --ion-toolbar-background: var(--ion-color-dark);
+  --ion-toolbar-background: #545252;
 
   /* Color de fondo de la Barra de Pestañas */
-  --ion-tab-bar-background: var(--ion-color-dark);
+  --ion-tab-bar-background: #545252;
 
   /* Color de los items (texto, etc) */
-  --ion-item-background: var(--ion-color-medium);
-  --ion-card-background: var(--ion-color-dark);
+  --ion-item-background: #999;
+  --ion-card-background: #8F8F8F;
 }

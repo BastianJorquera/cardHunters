@@ -18,30 +18,34 @@
 
     <!-- 3. VISTA 2: Carrito con Items -->
     <div *ngIf="carrito.cantidadTotal > 0">
-      <ion-list>
-        <!-- Itera sobre los items del carrito -->
-        <ion-item *ngFor="let item of carrito.items" color="medium">
+<ion-list>
+        <ion-item *ngFor="let item of carrito.items">
+
           <ion-thumbnail slot="start">
             <img [src]="item.carta.imagenUrl" [alt]="item.carta.nombre">
           </ion-thumbnail>
-          <ion-label>
+
+<ion-label class="ion-text-wrap">
             <h2>{{ item.carta.nombre }}</h2>
-            <p>{{ item.carta.precio | currency:'CLP':'$' }} c/u</p>
+
+            <p class="info-extra" *ngIf="item.carta.nombre_set">
+              Set: {{ item.carta.nombre_set }}
+            </p>
+            <p class="info-extra" *ngIf="item.carta.estado">
+              Estado: {{ item.carta.estado }}
+            </p>
+
+            <p class="precio-item">
+              {{ item.carta.precio | currency:'CLP':'$' }}
+            </p>
           </ion-label>
 
-          <!-- Controles de Cantidad -->
-          <div slot="end" class="quantity-controls">
-            <ion-button fill="clear" (click)="disminuirCantidad(item)">
-              <ion-icon slot="icon-only" name="remove"></ion-icon>
-            </ion-button>
-            <span class="quantity">{{ item.cantidad }}</span>
-            <ion-button fill="clear" (click)="aumentarCantidad(item)">
-              <ion-icon slot="icon-only" name="add"></ion-icon>
-            </ion-button>
+<div slot="end" class="quantity-controls">
             <ion-button fill="clear" color="danger" (click)="eliminarItem(item.carta.id)">
               <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
             </ion-button>
           </div>
+
         </ion-item>
       </ion-list>
 

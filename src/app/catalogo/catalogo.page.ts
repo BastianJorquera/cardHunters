@@ -78,7 +78,10 @@ export class CatalogoPage implements OnInit {
       // Campos "amigables" que usan las plantillas del carrito/lista de deseos
       id: pub.id_publicacion,
       precio: pub.precio,
-      imagen: pub.carta.imagen_carta    
+      imagen: pub.carta.imagen_carta  ,
+      imagenUrl: pub.carta.imagen_carta, // Asegúrate de usar 'imagenUrl' para coincidir con la interfaz
+      nombre_set: pub.carta.nombre_set,  // Enviamos el Set
+      estado: pub.estado                  // Enviamos el Estado (Observación)
     };
 
     this.carritoService.addItem(cartaParaCarrito);
@@ -87,7 +90,7 @@ export class CatalogoPage implements OnInit {
     const toast = await this.toastController.create({
       message: `${pub.carta.nombre} añadido al carrito`,
       duration: 1500,
-      position: 'top',
+      position: 'bottom',
       color: 'success'
     });
     toast.present();

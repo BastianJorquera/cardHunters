@@ -3,8 +3,6 @@ import { Observable } from 'rxjs';
 import { CarritoService, CarritoState, CarritoItem } from '../services/carrito.service';
 import { UsuarioService } from '../services/usuario.service';
 import { Router } from '@angular/router';
-
-// Imports para Standalone
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../shared/header/header.component';
@@ -23,7 +21,7 @@ import {
   ToastController  // Se inyecta
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, remove, trashOutline, cartOutline } from 'ionicons/icons';
+import { trashOutline, cartOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-carrito',
@@ -63,22 +61,38 @@ export class CarritoPage {
     // "Escuchamos" el estado del login
     this.isLoggedIn$ = this.usuarioService.isLogged;
 
-    addIcons({ add, remove, trashOutline, cartOutline });
+    addIcons({ trashOutline, cartOutline });
   }
 
   // --- Métodos de Interacción del Carrito ---
 
-  aumentarCantidad(item: CarritoItem) {
-    this.carritoService.updateItemQuantity(item.carta.id, item.cantidad + 1);
-  }
+async eliminarItem(cartaId: number) {
+    const alert = await this.alertController.create({
+      header: 'Eliminar producto',
+      message: '¿Estás seguro de que deseas eliminar esta carta del carrito?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            // El usuario canceló, no hacemos nada
+            console.log('Eliminación cancelada');
+          }
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive', // En iOS esto lo pone rojo automáticamente
+          handler: () => {
+            // El usuario confirmó, procedemos a borrar
+            this.carritoService.removeItem(cartaId);
+            this.mostrarToast('Producto eliminado');
+          }
+        }
+      ]
+    });
 
-  disminuirCantidad(item: CarritoItem) {
-    this.carritoService.updateItemQuantity(item.carta.id, item.cantidad - 1);
-  }
-
-  eliminarItem(cartaId: number) {
-    this.carritoService.removeItem(cartaId);
-    this.mostrarToast('Producto eliminado');
+    await alert.present();
   }
 
   async vaciarCarrito() {

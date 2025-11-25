@@ -12,14 +12,12 @@
           size-lg="3"
           *ngFor="let pub of publicaciones">
 
-          <ion-card
+<ion-card
             (click)="verDetallePublicacion(pub)"
-            color="dark"
             class="ion-activatable">
 
             <ion-ripple-effect></ion-ripple-effect>
 
-            <!-- Imagen: viene de la carta asociada -->
             <img
               [src]="pub.carta?.imagen_carta"
               [alt]="pub.carta?.nombre || 'Carta'" />
@@ -27,12 +25,17 @@
             <ion-card-header>
               <ion-card-title>
                 {{ pub.carta?.nombre }}
-              </ion-card-title>
 
-              <!-- Precio: viene de la PUBLICACIÓN -->
-              <ion-card-subtitle>
+
+              <p class="card-info" *ngIf="pub.carta?.nombre_set">
+                {{ pub.carta?.nombre_set }}
+              </p>
+
+              <p class="card-info" *ngIf="pub.estado">
+                Estado: {{ pub.estado }}
+              </p>
                 {{ pub.precio | currency:'CLP':'$' }}
-              </ion-card-subtitle>
+              </ion-card-title>
             </ion-card-header>
 
             <ion-button

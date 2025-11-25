@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-// --- Interfaces (Mantenidas aquí para simplicidad) ---
-export interface CartaCarrito{
-  id: number;     //ID para el carrito
+// --- Interfaces ---
+export interface CartaCarrito {
+  id: number;
   nombre: string;
   precio: number;
   imagenUrl: string;
+  nombre_set?: string;
+  estado?: string;
 }
 export interface CarritoItem {
   carta: CartaCarrito;
@@ -20,60 +22,66 @@ export interface CarritoState {
 }
 // --- Fin Interfaces ---
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class CarritoService {
 
-  // 1. El "Estado" privado.
   private carritoSubject = new BehaviorSubject<CarritoState>({
     items: [],
     cantidadTotal: 0,
     total: 0
   });
 
-  // 2. El "Observable" público. Los componentes se suscriben a esto.
   public carrito$ = this.carritoSubject.asObservable();
+
+  // Guardamos el ID del usuario actual para la persistencia
+  private currentUserId: string | number | null = null;
+  private readonly STORAGE_KEY_PREFIX = 'cart_';
 
   constructor() {}
 
   /**
-   * Añade un item al carrito.
+   * Inicializa el carrito para un usuario específico.
+   * Se debe llamar al loguearse o al cargar la app si ya hay sesión.
+   */
+  initCart(userId: string | number) {
+    this.currentUserId = userId;
+    this.loadFromStorage();
+  }
+
+  /**
+   * Limpia el usuario actual (logout) y vacía el estado en memoria.
+   */
+  clearUserSession() {
+    this.currentUserId = null;
+    // Reiniciamos el carrito en memoria (vacío)
+    this.carritoSubject.next({
+      items: [],
+      cantidadTotal: 0,
+      total: 0
+    });
+  }
+
+  /**
+   * Añade un item al carrito. (AHORA SOLO PERMITE CARTAS ÚNICAS)
    */
   addItem(carta: CartaCarrito) {
-    const estadoActual = this.carritoSubject.value; // Obtiene el valor actual
-    const items = [...estadoActual.items]; // Copia los items
+    const estadoActual = this.carritoSubject.value;
+    const items = [...estadoActual.items];
 
     const itemExistente = items.find(i => i.carta.id === carta.id);
 
     if (itemExistente) {
-      // Si existe, solo aumenta la cantidad
-      itemExistente.cantidad++;
+      // CAMBIO: Como son cartas únicas, si ya existe, no hacemos nada (o podrías mostrar una alerta).
+      console.log('Esta carta ya está en el carrito');
+      return;
     } else {
-      // Si es nuevo, lo añade al array
+      // Si es nuevo, lo añade con cantidad 1
       items.push({ carta: carta, cantidad: 1 });
     }
 
     this.actualizarSubject(items);
-  }
-
-  /**
-   * Actualiza la cantidad de un item.
-   */
-  updateItemQuantity(cartaId: number, nuevaCantidad: number) {
-    const items = [...this.carritoSubject.value.items];
-    const itemIndex = items.findIndex(i => i.carta.id === cartaId);
-
-    if (itemIndex > -1) {
-      if (nuevaCantidad > 0) {
-        items[itemIndex].cantidad = nuevaCantidad;
-      } else {
-        // Si la cantidad es 0 o menos, elimina el item
-        items.splice(itemIndex, 1);
-      }
-      this.actualizarSubject(items);
-    }
   }
 
   /**
@@ -87,27 +95,47 @@ export class CarritoService {
   /**
    * Vacía el carrito por completo.
    */
-  clearCart() { // <-- ARREGLO 3: AÑADIDA ESTA FUNCIÓN
+  clearCart() {
     this.actualizarSubject([]);
   }
 
-  /**
-   * Método privado para recalcular totales y notificar a los suscriptores.
-   */
+  // --- Métodos Privados de Persistencia ---
+
   private actualizarSubject(items: CarritoItem[]) {
-    // Calcula los nuevos totales
     const cantidadTotal = items.reduce((sum, item) => sum + item.cantidad, 0);
     const total = items.reduce((sum, item) => sum + (item.carta.precio * item.cantidad), 0);
 
-    // Crea el nuevo estado
     const nuevoEstado: CarritoState = {
-      items: items,
-      cantidadTotal: cantidadTotal,
-      total: total
+      items,
+      cantidadTotal,
+      total
     };
 
-    // Notifica a todos los suscriptores con el nuevo estado
     this.carritoSubject.next(nuevoEstado);
+    this.saveToStorage(nuevoEstado);
+  }
+
+  private saveToStorage(state: CarritoState) {
+    // Solo guardamos si tenemos un usuario identificado
+    if (this.currentUserId) {
+      localStorage.setItem(`${this.STORAGE_KEY_PREFIX}${this.currentUserId}`, JSON.stringify(state));
+    }
+  }
+
+  private loadFromStorage() {
+    if (!this.currentUserId) return;
+
+    const stored = localStorage.getItem(`${this.STORAGE_KEY_PREFIX}${this.currentUserId}`);
+    if (stored) {
+      try {
+        const state = JSON.parse(stored);
+        this.carritoSubject.next(state);
+      } catch (e) {
+        console.error('Error cargando carrito', e);
+      }
+    } else {
+      // Si no hay nada guardado, empezamos vacíos
+      this.carritoSubject.next({ items: [], cantidadTotal: 0, total: 0 });
+    }
   }
 }
-
