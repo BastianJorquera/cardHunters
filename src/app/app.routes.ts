@@ -29,6 +29,10 @@ export const routes: Routes = [
   {
     path: 'cambio-contrasena',
     loadComponent: () => import('./pages/cambio-contrasena/cambio-contrasena.page').then( m => m.CambioContrasenaPage)
+  },  {
+    path: 'historial-publicaciones',
+    loadComponent: () => import('./pages/historial-publicaciones/historial-publicaciones.page').then( m => m.HistorialPublicacionesPage)
   },
+
 ];
 

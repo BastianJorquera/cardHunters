@@ -28,11 +28,11 @@
 
         <div class="botones-perfil">
           <ion-button expand="block" fill="outline" color="primary" class="botones-perfil">
-            Ver Historial de Compras
+            Ver mis Compras
           </ion-button>
 
-          <ion-button expand="block" fill="outline" color="primary" class="botones-perfil">
-            Ver Historial de publicaciones
+          <ion-button expand="block" fill="outline" color="primary" class="botones-perfil" [routerLink]="['/historial-publicaciones']" routerLinkActive="router-link-active" >
+            Ver mis publicaciones
           </ion-button>
 
           <ion-button expand="block" fill="outline" color="primary" (click)="irAEditarPerfil()" class="botones-perfil">

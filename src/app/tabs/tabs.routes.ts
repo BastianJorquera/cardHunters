@@ -16,6 +16,7 @@ export const routes: Routes = [
         path: 'generar-publicacion', // Ruta pública
         loadComponent: () =>
           import('../generar-publicacion/generar-publicacion.page').then((m) => m.GenerarPublicacionPage),
+          canActivate: [AuthGuard]
       },
       {
         path: 'carrito', // Ruta pública

@@ -16,11 +16,13 @@ import {
   IonSearchbar,
   IonButton,
   IonList,
-  IonTextarea
+  IonTextarea,
+  ToastController
 } from '@ionic/angular/standalone';
 
 import { PublicacionesService, Publicacion } from '../services/publicaciones.service';
 import { CartasService, Carta } from '../services/cartas.service';
+import { UsuarioService } from '../services/usuario.service';
 
 @Component({
   selector: 'app-generar-publicacion',
@@ -43,7 +45,7 @@ import { CartasService, Carta } from '../services/cartas.service';
     IonTextarea,
     RouterModule,
     CommonModule,
-    FormsModule
+    FormsModule,
   ]
 })
 export class GenerarPublicacionPage implements OnInit {
@@ -64,10 +66,25 @@ export class GenerarPublicacionPage implements OnInit {
   constructor(
     private publicacionesService: PublicacionesService,
     private cartasService: CartasService,
-    private router: Router
+    private router: Router,
+    private usuarioService: UsuarioService,
+    private toastController: ToastController
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    //valido si hay usuario logeado
+    if (!this.usuarioService.isLoggedValue) {
+      const toast = await this.toastController.create({
+        message: 'Debes iniciar sesión para generar una publicación.',
+        duration: 2000,
+        position: 'top',
+        color: 'warning'
+      });
+      await toast.present();
+
+      this.router.navigateByUrl('/login');
+    }
+
     this.cargarCartas();
     this.cargarMisPublicaciones();
   }
@@ -88,9 +105,6 @@ export class GenerarPublicacionPage implements OnInit {
     const value = event.detail?.value ?? '';
     this.textoBusqueda = value;
 
-    // Si el texto está vacío, puedes:
-    // a) volver a cargar todas las cartas, o
-    // b) dejar la lista vacía.
     if (!this.textoBusqueda || this.textoBusqueda.trim().length === 0) {
       this.cargarCartasIniciales();
       return;
@@ -126,12 +140,24 @@ export class GenerarPublicacionPage implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar mis publicaciones:', err);
-        // acá no alerto fuerte, solo log; es algo “extra”
       }
     });
   }
 
-  crearPublicacion() {
+  async crearPublicacion() {
+    // Doble seguridad: por si alguien entra por URL o cambia cosas en runtime
+    if (!this.usuarioService.isLoggedValue) {
+      const toast = await this.toastController.create({
+        message: 'Debes iniciar sesión para crear una publicación.',
+        duration: 2000,
+        position: 'bottom',
+        color: 'warning'
+      });
+      await toast.present();
+      this.router.navigateByUrl('/login');
+      return;
+    }
+
     if (!this.cartaSeleccionadaId || !this.precio || !this.cantidad) {
       alert('Debes seleccionar una carta y completar precio y cantidad.');
       return;
@@ -141,23 +167,34 @@ export class GenerarPublicacionPage implements OnInit {
       id_carta: this.cartaSeleccionadaId,
       precio: this.precio,
       cantidad: this.cantidad,
-      estado: this.estado // observación
+      estado: this.estado
     };
 
     this.publicacionesService.crearPublicacion(nuevaPub).subscribe({
-      next: (res) => {
+      next: async (res) => {
         console.log('Publicación creada:', res);
-        alert('Publicación creada correctamente.');
-        // Recargo listado abajo para que el usuario vea su nueva publicación
+
+        const toast = await this.toastController.create({
+          message: 'Publicación creada correctamente.',
+          duration: 2000,
+          position: 'bottom',
+          color: 'success'
+        });
+        await toast.present();
+
         this.cargarMisPublicaciones();
-        // Opcional: limpiar formulario después de publicar
         this.limpiarFormulario();
-        // si quieres redirigir al catálogo, deja la línea:
-        // this.router.navigateByUrl('/tabs/catalogo');
       },
-      error: (err) => {
+      error: async (err) => {
         console.error('Error al crear publicación', err);
-        alert('Ocurrió un error al crear la publicación.');
+
+        const toast = await this.toastController.create({
+          message: 'Ocurrió un error al crear la publicación.',
+          duration: 2000,
+          position: 'bottom',
+          color: 'danger'
+        });
+        await toast.present();
       }
     });
   }
