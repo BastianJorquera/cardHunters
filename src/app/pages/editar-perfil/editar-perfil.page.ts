@@ -56,7 +56,7 @@ export class EditarPerfilPage implements OnInit {
 
   ngOnInit() {
   this.usuario = this.usuarioService.getUsuario();
-  this.usuarioEditable = { ...this.usuario }; // Hacemos una copia para editar
+  this.usuarioEditable = { ...this.usuario };
 
     if (!this.usuario) {
       this.usuarioService.getProfile().subscribe({
@@ -71,7 +71,7 @@ export class EditarPerfilPage implements OnInit {
       });
     }
   }
-  
+
   onClickCambiarFoto() {
     this.fileInput.nativeElement.click();
   }
@@ -108,7 +108,7 @@ export class EditarPerfilPage implements OnInit {
 
     console.log('datos enviados al backend', payload);
 
-    this.usuarioService.actualizarPerfil(payload)  
+    this.usuarioService.actualizarPerfil(payload)
     .subscribe({
       next: (res) => {
         console.log('RESPUESTA BACKEND', res);
@@ -137,7 +137,7 @@ export class EditarPerfilPage implements OnInit {
 
   eliminarCuenta() {
     console.log('Eliminando cuenta...');
-    
+
     this.usuarioService.deletePerfil().subscribe({
       next: () => {
         alert('Cuenta eliminada correctamente.');
@@ -148,7 +148,7 @@ export class EditarPerfilPage implements OnInit {
         alert('No se pudo eliminar la cuenta :( Intenta nuevamente');
       }
     });
-    
+
   }
 
 }

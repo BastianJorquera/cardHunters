@@ -32,7 +32,7 @@ export class UsuarioService {
     const token = localStorage.getItem('auth_token');
     if (token) {
       this.isLoggedInSubject.next(true);
-      // Intentamos cargar el perfil para obtener el ID y cargar el carrito
+      // Carga el perfil para obtener el ID y cargar el carrito
       this.getProfile().subscribe();
     } else {
       this.isLoggedInSubject.next(false);
@@ -78,7 +78,7 @@ export class UsuarioService {
     return this.http.get(`${this.apiUrl}/users/me`, { headers }).pipe(
       tap((data: any) => {
         this.usuario = data;
-        // AQUI ESTA LA CLAVE: Inicializamos el carrito con el ID del usuario obtenido
+        // Inicializamos el carrito con el ID del usuario obtenido
         if (data && data.id_usuario) {
           this.carritoService.initCart(data.id_usuario);
         }

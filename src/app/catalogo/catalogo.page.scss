@@ -1,8 +1,8 @@
 ion-card {
   margin: 8px auto; /* 'auto' centra la carta si es más pequeña que la columna */
   width: 100%;
-  max-width: 300px; /* <--- ESTO controla el tamaño máximo. Ajusta este número a tu gusto (ej. 150px, 180px) */
-  height: auto;     /* Quitamos la altura fija del contenedor para que se adapte */
+  max-width: 300px; /* <--- ESTO controla el tamaño máximo (ej. 150px, 180px) */
+  height: auto;
   display: flex;
   flex-direction: column;
 
@@ -10,7 +10,7 @@ ion-card {
   img {
     width: 100%;            /* Llena el ancho definido por el max-width de la card */
     height: auto;
-    aspect-ratio: 63 / 88;  /* Mantiene la forma de carta TCG perfecta */
+    aspect-ratio: 63 / 88;  /* Mantiene la forma de carta*/
     object-fit: cover;
     display: block;
   }
@@ -36,7 +36,7 @@ ion-card {
     margin: 0;
     --border-radius: 0;
     font-size: 0.8rem;
-    height: 35px; /* Botón un poco más compacto */
+    height: 35px;
   }
 }
 

@@ -28,7 +28,6 @@ import { trashOutline, cartOutline } from 'ionicons/icons';
   templateUrl: 'carrito.page.html',
   styleUrls: ['carrito.page.scss'],
   standalone: true,
-  // --- ¡ARREGLO 1: Añadimos los componentes al array de imports! ---
   imports: [
     CommonModule,
     RouterModule,
@@ -114,7 +113,7 @@ async eliminarItem(cartaId: number) {
   }
 
   /**
-   * Lógica clave de tu E-Commerce.
+   * Lógica
    * Revisa si el usuario está logueado antes de pagar.
    */
   procederAlPago() {

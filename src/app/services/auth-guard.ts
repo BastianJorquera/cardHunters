@@ -16,7 +16,6 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean {
 
-    // Usamos el getter síncrono que creamos
     const isLogged = this.usuarioService.isLoggedValue;
 
     if (isLogged) {

@@ -13,6 +13,7 @@
   ion-button {
     margin-top: 20px;
   }
+
 }
 
 // Ajuste para la imagen pequeña a la izquierda
@@ -29,6 +30,7 @@ ion-thumbnail {
 
 // Estilos para el texto
 ion-label {
+
   h2 {
     font-weight: bold;
     font-size: 1rem;
@@ -37,7 +39,7 @@ ion-label {
 
   .info-extra {
     font-size: 0.8rem;
-    color: var(--ion-color-step-300, #b0b0b0); /* Gris suave */
+    color: var(--ion-color-step-300, --ion-color-primary); /* Gris suave */
     margin: 2px 0;
   }
 
@@ -46,10 +48,10 @@ ion-label {
     font-weight: bold;
     color: var(--ion-color-primary); /* Azul principal */
     font-size: 0.9rem;
+
   }
 }
 
-// (Mantén tus estilos existentes de .quantity-controls y .footer-summary...)
 .quantity-controls {
   display: flex;
   align-items: center;

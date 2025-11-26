@@ -44,8 +44,8 @@ import {
     IonCardSubtitle,
     IonButton,
     IonSpinner,
-    IonSearchbar, // <--- Agregarlo a los imports
-    IonToolbar    // <--- Agregarlo a los imports
+    IonSearchbar,
+    IonToolbar
   ],
 })
 export class CatalogoPage implements OnInit {
@@ -61,7 +61,7 @@ export class CatalogoPage implements OnInit {
     private carritoService: CarritoService,
     private toastController: ToastController
   ) {
-    // Usamos combineLatest para escuchar dos cosas a la vez:
+    // combineLatest para escuchar dos cosas a la vez:
     // 1. La respuesta de la API (getPublicaciones)
     // 2. Los cambios en la barra de búsqueda (searchTerm$)
     this.publicaciones$ = combineLatest([
@@ -95,10 +95,9 @@ export class CatalogoPage implements OnInit {
   // Método que se ejecuta cada vez que el usuario escribe en el buscador
   onSearchChange(event: any) {
     const valor = event.detail.value;
-    this.searchTerm$.next(valor); // Actualizamos el Subject
+    this.searchTerm$.next(valor); // Actualiza el Subject
   }
 
-  // ... (Mantén tus métodos agregarAlCarrito y verDetallePublicacion igual que antes)
   async agregarAlCarrito(pub: Publicacion, event: Event) {
     event.stopPropagation();
     if (!pub.carta) return;

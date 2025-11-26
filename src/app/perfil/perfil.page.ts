@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../services/usuario.service';
 import { Router } from '@angular/router';
 import { IonAvatar } from '@ionic/angular/standalone';
-
-// Imports para Standalone
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../shared/header/header.component';
@@ -44,7 +42,6 @@ import { logOutOutline } from 'ionicons/icons';
 })
 export class PerfilPage implements OnInit {
 
-  // Ya no necesitamos 'isLoggedIn$', el Guardia se encarga.
   public usuario: any | null = null; // Cambia 'any' por tu interfaz 'Usuario'
 
   constructor(
@@ -68,8 +65,8 @@ export class PerfilPage implements OnInit {
    * Solo necesitamos cargar los datos.
    */
   cargarDatosUsuario() {
-  // Si ya tenemos el usuario cargado en el servicio, úsalo directamente
-  /* 
+  // Si ya tiene el usuario cargado en el servicio, úsalo directamente
+  /*
   if (this.usuarioService.usuario) {
     this.usuario = this.usuarioService.usuario;
     return;
@@ -90,9 +87,9 @@ export class PerfilPage implements OnInit {
   });
   }
 
-  
+
   //Llama al servicio para cerrar sesión
-  
+
   cerrarSesion() {
     this.usuarioService.logout();
     this.router.navigateByUrl('/login'); // Envíalo a login
