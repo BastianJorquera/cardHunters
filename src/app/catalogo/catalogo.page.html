@@ -1,21 +1,29 @@
 <ion-content [fullscreen]="true">
 
-  <!-- Nos suscribimos a publicaciones$ -->
+  <ion-toolbar color="transparent">
+    <ion-searchbar
+      placeholder="Buscar carta, set o rareza..."
+      [debounce]="250"
+      (ionInput)="onSearchChange($event)"
+      animated="true">
+    </ion-searchbar>
+  </ion-toolbar>
+
   <ng-container *ngIf="publicaciones$ | async as publicaciones; else loading">
+
+    <div *ngIf="publicaciones.length === 0" class="ion-text-center ion-padding">
+      <p>No se encontraron cartas con ese criterio.</p>
+    </div>
+
     <ion-grid>
       <ion-row>
-
-        <!-- Itera sobre las publicaciones -->
         <ion-col
           size="6"
           size-md="4"
           size-lg="3"
           *ngFor="let pub of publicaciones">
 
-<ion-card
-            (click)="verDetallePublicacion(pub)"
-            class="ion-activatable">
-
+          <ion-card (click)="verDetallePublicacion(pub)" class="ion-activatable">
             <ion-ripple-effect></ion-ripple-effect>
 
             <img
@@ -25,17 +33,24 @@
             <ion-card-header>
               <ion-card-title>
                 {{ pub.carta?.nombre }}
+              </ion-card-title>
+
+              <ion-card-subtitle>
+                 {{ pub.precio | currency:'CLP':'$' }}
 
 
               <p class="card-info" *ngIf="pub.carta?.nombre_set">
-                {{ pub.carta?.nombre_set }}
+                Set: {{ pub.carta?.nombre_set }}
+              </p>
+
+              <p class="card-info" *ngIf="pub.carta?.rareza">
+                {{ pub.carta?.rareza }}
               </p>
 
               <p class="card-info" *ngIf="pub.estado">
-                Estado: {{ pub.estado }}
+                Est: {{ pub.estado }}
               </p>
-                {{ pub.precio | currency:'CLP':'$' }}
-              </ion-card-title>
+              </ion-card-subtitle>
             </ion-card-header>
 
             <ion-button
@@ -51,7 +66,6 @@
     </ion-grid>
   </ng-container>
 
-  <!-- Estado de Carga -->
   <ng-template #loading>
     <div class="ion-text-center ion-padding">
       <ion-spinner name="crescent"></ion-spinner>

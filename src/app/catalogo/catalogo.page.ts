@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { PublicacionesService, Publicacion } from '../services/publicaciones.service'; // Importa el servicio y la interfaz
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs'; // <--- Agregamos BehaviorSubject y combineLatest
+import { map } from 'rxjs/operators'; // <--- Agregamos map
+import { PublicacionesService, Publicacion } from '../services/publicaciones.service';
 import { CarritoService } from '../services/carrito.service';
-
-// Imports para Standalone
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent } from '../shared/header/header.component'; // Importa tu Header
-// --- ¡ARREGLO 1: Importamos los componentes de Ionic uno por uno! ---
+import { HeaderComponent } from '../shared/header/header.component';
+
 import {
   IonContent,
   IonGrid,
@@ -20,7 +19,9 @@ import {
   IonCardSubtitle,
   IonButton,
   IonSpinner,
-  ToastController // ToastController se inyecta, no se importa aquí
+  IonSearchbar, // <--- Importante: Importar el componente Searchbar
+  IonToolbar,   // <--- Opcional: para que se vea mejor en el header
+  ToastController
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -28,7 +29,6 @@ import {
   templateUrl: 'catalogo.page.html',
   styleUrls: ['catalogo.page.scss'],
   standalone: true,
-  // --- ¡ARREGLO 1: Añadimos los componentes al array de imports! ---
   imports: [
     CommonModule,
     RouterModule,
@@ -43,50 +43,78 @@ import {
     IonCardTitle,
     IonCardSubtitle,
     IonButton,
-    IonSpinner
+    IonSpinner,
+    IonSearchbar, // <--- Agregarlo a los imports
+    IonToolbar    // <--- Agregarlo a los imports
   ],
 })
 export class CatalogoPage implements OnInit {
 
-  public publicaciones$: Observable<Publicacion[]>; // Un observable para las publicaciones
+  // Observable final filtrado que usará el HTML
+  public publicaciones$: Observable<Publicacion[]>;
+
+  // Un Subject para controlar el término de búsqueda actual
+  private searchTerm$ = new BehaviorSubject<string>('');
 
   constructor(
     private publicacionesService: PublicacionesService,
     private carritoService: CarritoService,
     private toastController: ToastController
   ) {
-    // Inicializa el observable (aún no se suscribe)
-    this.publicaciones$ = this.publicacionesService.getPublicaciones();
+    // Usamos combineLatest para escuchar dos cosas a la vez:
+    // 1. La respuesta de la API (getPublicaciones)
+    // 2. Los cambios en la barra de búsqueda (searchTerm$)
+    this.publicaciones$ = combineLatest([
+      this.publicacionesService.getPublicaciones(),
+      this.searchTerm$
+    ]).pipe(
+      map(([publicaciones, term]) => {
+        // Si no hay término de búsqueda, devolvemos todo
+        if (!term || term.trim() === '') {
+          return publicaciones;
+        }
+
+        // Si hay texto, filtramos
+        const lowerTerm = term.toLowerCase();
+        return publicaciones.filter(pub => {
+          const nombreCarta = pub.carta?.nombre?.toLowerCase() || '';
+          const nombreSet = pub.carta?.nombre_set?.toLowerCase() || '';
+          const rareza = pub.carta?.rareza?.toLowerCase() || '';
+
+          // Filtramos si el término coincide con el Nombre, el Set o la Rareza
+          return nombreCarta.includes(lowerTerm) ||
+                 nombreSet.includes(lowerTerm) ||
+                 rareza.includes(lowerTerm);
+        });
+      })
+    );
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  // Método que se ejecuta cada vez que el usuario escribe en el buscador
+  onSearchChange(event: any) {
+    const valor = event.detail.value;
+    this.searchTerm$.next(valor); // Actualizamos el Subject
   }
 
-  /**
-   * Llama al CarritoService para añadir un item
-   */
+  // ... (Mantén tus métodos agregarAlCarrito y verDetallePublicacion igual que antes)
   async agregarAlCarrito(pub: Publicacion, event: Event) {
-    event.stopPropagation(); // Evita que el clic se propague a la card
-
-    if (!pub.carta) {
-      console.error('La publicación no tiene carta asociada:', pub);
-      return;
-    }
+    event.stopPropagation();
+    if (!pub.carta) return;
 
     const cartaParaCarrito: any = {
       ...pub.carta,
-      // Campos "amigables" que usan las plantillas del carrito/lista de deseos
       id: pub.id_publicacion,
       precio: pub.precio,
-      imagen: pub.carta.imagen_carta  ,
-      imagenUrl: pub.carta.imagen_carta, // Asegúrate de usar 'imagenUrl' para coincidir con la interfaz
-      nombre_set: pub.carta.nombre_set,  // Enviamos el Set
-      estado: pub.estado                  // Enviamos el Estado (Observación)
+      imagen: pub.carta.imagen_carta,
+      imagenUrl: pub.carta.imagen_carta,
+      nombre_set: pub.carta.nombre_set,
+      estado: pub.estado
     };
 
     this.carritoService.addItem(cartaParaCarrito);
 
-    // Muestra una notificación (Toast)
     const toast = await this.toastController.create({
       message: `${pub.carta.nombre} añadido al carrito`,
       duration: 1500,
@@ -97,12 +125,6 @@ export class CatalogoPage implements OnInit {
   }
 
   verDetallePublicacion(pub: Publicacion) {
-    if (!pub.carta) {
-      console.log('Publicación sin carta asociada:', pub);
-      return;
-    }
-    console.log('Navegar al detalle de:', pub.carta.nombre);
-    // this.router.navigateByUrl(`/detalle-publicacion/${pub.id_publicacion}`);
+    console.log('Ver detalle', pub);
   }
 }
-
